@@ -10,7 +10,7 @@ Service that will help with delivery between countries (or cities). User can do 
 ## Setup
 
 Describe the steps to set up the environment and run the application. This can be a bash script or docker commands.
-
+Before run docker you should run "create_db.py" file (it locates in app)
 ```
 docker build -t flask-app
 docker run -p 8080:8080 flask-app

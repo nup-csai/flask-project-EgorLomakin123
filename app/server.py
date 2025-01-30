@@ -13,14 +13,7 @@ logger = LoggerSingleton().get_logger()
 
 @app.route('/')
 def home():
-    user = {
-        'name': 'John Doe',
-        'contact': 'user@example.com',
-        'image_path': 'path_to_image.jpg'
-    }
-    order = db_worker.get_lots()[0]
-    return render_template('mini_order.html', order=order, user=user)
-    # return redirect('/main_page', 301)
+    return redirect('/auth', 301)
 
 
 @app.route('/auth', methods=['GET', 'POST'])
