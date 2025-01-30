@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .register-container {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 360px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .register-container h1 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .register-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .register-container input {
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .register-container input:focus {
+            border-color: #007bff;
+        }
+
+        .register-container button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .register-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .register-container p {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .register-container a {
+            border-color: #007bff;
+            text-decoration: none;
+        }
+
+        .register-container a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Registration</h1>
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        <form action="/register" method="POST">
+            <input type="text" name="username" placeholder="User name" required>
+            <input type="contact" name="contact info" placeholder="Contact info">
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm password" required>
+            <button type="submit">Enter</button>
+        </form>
+        <p>Already have account? <a href="/auth">Authorization</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .order-container {
+            display: flex;
+            flex-direction: row;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 800px;
+            max-height: 300px;
+            width: 100%;
+        }
+
+        .image-gallery {
+            position: relative;
+            width: 50%;
+            overflow: hidden;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-gallery button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .image-gallery button:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .image-gallery .prev {
+            left: 10px;
+        }
+
+        .image-gallery .next {
+            right: 10px;
+        }
+
+        .order-info {
+            width: 50%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .order-info h2 {
+            font-size: 1.5em;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        .order-info p {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .order-info span {
+            font-weight: bold;
+        }
+
+        .order-info .contact {
+            margin-top: 16px;
+            font-size: 0.9em;
+            color: #007bff;
+        }
+
+        .order-info .contact:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="order-container" data-order-id="{{ order.id }}">
+        <div class="image-gallery">
+            <img class="current-image" src="{{ url_for('static', filename='uploads/' + order.images[0]) }}" alt="Order Image">
+            <button class="prev" onclick="prevImage('{{ order.id }}')">&#8249;</button>
+            <button class="next" onclick="nextImage('{{ order.id }}')">&#8250;</button>
+        </div>
+
+        <div class="order-info">
+            <h2>Description</h2>
+            <p><span>Info:</span> {{ order.description }}</p>
+            <p><span>Category:</span> {{ order.category }}</p>
+            <p><span>Weight:</span> {{ order.weight }} кг</p>
+            <p><span>Author:</span> {{ order.name }}</p>
+            <p><span>Contact:</span> {{ order.contact }}</p>
+            {% if user.owner %}
+                <form action="/delete_lot/{{ order.id }}">
+                    <input type="submit" value="disable" />
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <script>
+    const imageIndexes = {};
+
+    const imageData = JSON.parse('{{ orders | tojson | safe }}');
+
+    const orderImages = {};
+    imageData.forEach(order => {
+        orderImages[order.id] = order.images.map(img => `/static/uploads/${img}`);
+        imageIndexes[order.id] = 0;
+    });
+
+    function updateImage(orderId) {
+        const container = document.querySelector(`.order-container[data-order-id="${orderId}"]`);
+        if (!container) return;
+
+        const imageElement = container.querySelector(".current-image");
+        imageElement.src = orderImages[orderId][imageIndexes[orderId]];
+    }
+
+    function prevImage(orderId) {
+        imageIndexes[orderId] = (imageIndexes[orderId] - 1 + orderImages[orderId].length) % orderImages[orderId].length;
+        updateImage(orderId);
+    }
+
+    function nextImage(orderId) {
+        imageIndexes[orderId] = (imageIndexes[orderId] + 1) % orderImages[orderId].length;
+        updateImage(orderId);
+    }
+
+    </script>
+</body>
+</html>

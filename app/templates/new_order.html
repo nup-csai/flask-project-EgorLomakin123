@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New order</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.9em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        .photo-collection {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .photo-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-photo-btn {
+            padding: 10px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .add-photo-btn:hover {
+            background: #0056b3;
+        }
+
+        .submit-btn {
+            padding: 10px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .back-btn {
+            padding: 10px 16px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: darkred;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>New Order</h2>
+        <form id="order-form" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="photos">Photos:</label>
+                <input type="file" id="photo-input" name="photos[]" class="hidden" accept="image/*" multiple>
+                <div class="photo-collection" id="photo-collection"></div>
+                <button type="button" class="add-photo-btn" id="add-photo-btn">Add photo</button>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" placeholder="Write description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="">Choose category</option>
+                    <option value="1">Package</option>
+                    <option value="2">Envelope</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="weight">Вес (в кг):</label>
+                <input type="number" id="weight" name="weight" min="0.1" max="500" step="0.1" placeholder="Input weight" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Create order</button>
+        </form>
+        <button type="back" class="back-btn" id="back">Back on main Page</button>
+    </div>
+
+    <script>
+        let uploadedFiles = [];
+
+        document.getElementById("add-photo-btn").addEventListener("click", function() {
+            document.getElementById("photo-input").click();
+        });
+
+        document.getElementById("photo-input").addEventListener("change", function(event) {
+            let files = event.target.files;
+            const photoCollection = document.getElementById("photo-collection");
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                uploadedFiles.push(file);
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const div = document.createElement("div");
+                    div.classList.add("photo-item");
+
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.textContent = "×";
+                    removeBtn.classList.add("remove-btn");
+                    removeBtn.onclick = function() {
+                        let index = uploadedFiles.indexOf(file);
+                        if (index > -1) {
+                            uploadedFiles.splice(index, 1);
+                        }
+                        div.remove();
+                    };
+
+                    div.appendChild(img);
+                    div.appendChild(removeBtn);
+                    photoCollection.appendChild(div);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById("order-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            formData.delete("photos[]");
+            uploadedFiles.forEach(file => formData.append("photos[]", file));
+            fetch("/new_order", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .catch(error => console.error("Ошибка:", error));
+
+        });
+
+        document.getElementById("back").addEventListener("click", function (b)
+        {
+            window.location.href = '/main_page';
+        });
+    </script>
+</body>
+</html>

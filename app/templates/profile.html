@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            display: flex;
+            width: 80%;
+            max-width: 900px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            gap: 20px;
+        }
+
+        .profile-info {
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-right: 1px solid #ddd;
+            padding-right: 20px;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #007bff;
+        }
+
+        .upload-btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #0056b3;
+        }
+
+        .user-name {
+            margin-top: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .contact-info {
+            margin-top: 10px;
+            font-size: 0.9em;
+            text-align: center;
+            color: #555;
+        }
+
+        .orders-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            max-height: 400px;
+            padding: 10px;
+        }
+
+        .order-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 14px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-card h3 {
+            margin: 0;
+            font-size: 1em;
+            color: #333;
+        }
+
+
+        .main-page-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            text-align: center;
+            width: 200px;
+            margin-top: 20px;
+        }
+
+        .main-page-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <div class="profile-info">
+            <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" alt="./images/default_avatar.png" class="avatar">
+            <form id="uploadForm" action="/upload_avatar" method="POST" enctype="multipart/form-data">
+                <input type="file" name="avatar" accept="image/*" id="fileInput" onchange="submitForm()" style="display: none;">
+                <label for="fileInput" class="upload-btn">Upload avatar</label>
+            </form>
+
+            <script>
+                function submitForm() {
+                    document.getElementById("uploadForm").submit();
+                }
+            </script>
+            <div class="user-name">{{ user.name }}</div>
+            <div class="contact-info">{{ user.contact }}</div>
+        </div>
+
+        <div class="orders-container">
+            {% for order in orders %}
+                <div class="order-card">
+                    {% include "mini_order.html" %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <a href="/main_page" class="main-page-btn">Back on main</a>
+
+</body>
+</html>
