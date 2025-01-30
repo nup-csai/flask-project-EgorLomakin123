@@ -12,24 +12,26 @@ Service that will help with delivery between countries (or cities). User can do 
 Describe the steps to set up the environment and run the application. This can be a bash script or docker commands.
 
 ```
-Your commands
-
+docker build -t flask-app
+docker run -p 8080:8080 flask-app
 ```
 
 ## Requirements
 
-Describe technologies, libraries, languages you are using (this can be updated in the future).
+Flask
 
 ## Features
 
 Describe the main features the application performs.
 
-* Feature 1
-* Feature 2
+* User can use filters
+* Every order can have 1-3 images for better understanding of size
+* Order author can close his order
+* Customization (every user can set avatar)
 
 ## Git
 
-Specify which branch will store the latest stable version of the application
+Actual version is on master branch
 
 ## Success Criteria
 
